@@ -1,0 +1,11 @@
+Format Description
+    Items-1 New items are delimited by blank lines (or start of the file).
+    Items-2 All whitespace is preserved in an item's title.
+    Attributes-1 Each attribute goes directly after a new item or attribute.
+    Attributes-2 Attributes delimit their name and contents w/ whitespace once.
+    Attributes-3 The contents of an attribute, however long, must lie completely within a single line.
+
+An Example
+       att An attribute.
+   feature A feature (another attribute).
+
