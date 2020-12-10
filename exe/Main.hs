@@ -10,11 +10,11 @@ import           Text.Pandoc
 
 -- Placeholder maine routine, meant for testing expoort to pandoc's Markdown.
 main :: IO ()
-main = do
+main =
     let rExtenstions = def{ readerExtensions = pandocExtensions }
-    let wExtenstions = def{ writerExtensions = pandocExtensions }
-    txt <- TIO.readFile "examples/in.txt"
-    catalogDoc <- runIO (readCatalog rExtenstions txt) >>= handleError
-    rst <- runIO (writeMarkdown wExtenstions catalogDoc) >>= handleError
-    TIO.putStrLn rst
+        wExtenstions = def{ writerExtensions = pandocExtensions }
+    in TIO.readFile "examples/in.txt"
+       >>= runIOorExplode . (readCatalog rExtenstions)
+       >>= runIOorExplode . (writeNative wExtenstions)
+       >>= TIO.putStrLn
 
