@@ -21,15 +21,27 @@ formattedAttribute :: Attribute -> (Inlines, [Blocks])
 formattedAttribute (att, content) =
     (strong (str att), [para (str content)])
 
+-- Builds a catalog in Pandoc form from the contents of a text
+-- readCatalog :: PandocMonad m => ReaderOptions -> T.Text -> m Pandoc
+-- readCatalog opts s =
+--     -- This parser function defines the catalog format in practice.
+--     let parse     [] = Entry T.empty []
+--         parse    [x] = Entry       x []
+--         parse (x:xs) = Entry       x (keyValSplit . T.words <$> xs)
+--                                 where keyValSplit [] = (T.empty, T.empty)
+--                                       keyValSplit (w:ws) = (w, T.unwords ws)
+--     in do
+--         parsed <- parse <$> (splitWhen (== T.empty) (T.lines s))
+--         return $ doc (mconcat $ formattedEntry <$> parsed)
+
 -- Builds a catalog in Pandoc form from catalog entries and an added title
-catalog :: T.Text -> [Entry] -> Pandoc
-catalog title entries = setTitle (str title) $ doc $
-    header 1 (str title) <>
-    (mconcat $ formattedEntry <$> entries)
+readCatalog :: PandocMonad m => ReaderOptions -> T.Text -> m Pandoc
+readCatalog opts s =
+    return $ doc (mconcat $ formattedEntry <$> (parseCatalog s))
 
 -- Conversion from a plaintext catalog to an abstract List of Entries
-readCatalog :: T.Text -> [Entry]
-readCatalog contents =
+parseCatalog :: T.Text -> [Entry]
+parseCatalog contents =
     let parse     [] = Entry T.empty []
         parse    [x] = Entry       x []
         parse (x:xs) = Entry       x (keyValSplit . T.words <$> xs)
