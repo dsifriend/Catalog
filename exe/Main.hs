@@ -13,8 +13,8 @@ main :: IO ()
 main =
     let rExtenstions = def{ readerExtensions = pandocExtensions }
         wExtenstions = def{ writerExtensions = pandocExtensions }
-    in TIO.readFile "examples/in.txt"
+    in TIO.getContents
        >>= runIOorExplode . (readCatalog rExtenstions)
-       >>= runIOorExplode . (writeNative wExtenstions)
+       >>= runIOorExplode . (writeCatalog wExtenstions)
        >>= TIO.putStrLn
 
